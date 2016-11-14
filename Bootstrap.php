@@ -28,7 +28,7 @@ class Shopware_Plugins_Backend_ArvPlentyMarketsMapPrices_Bootstrap extends Shopw
             'label' => $this->getLabel(),
             'source' => "Community",
             'description' => '',
-            'license' => 'commercial',
+            'license' => 'MIT',
             'copyright' => 'Copyright © '. date('Y') . ', arvatis media GmbH',
             'support' => '',
             'link' => 'http://www.arvatis.com/'
