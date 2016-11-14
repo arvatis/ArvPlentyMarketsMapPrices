@@ -2,6 +2,9 @@
 
 class Shopware_Plugins_Backend_ArvPlentyMarketsMapPrices_Bootstrap extends Shopware_Components_Plugin_Bootstrap
 {
+    /**
+     * @var array
+     */
     private static $customerGroupToPriceFieldMapping = [
         'H' => 'Price8',
         'HEU' => 'Price9'
@@ -9,6 +12,7 @@ class Shopware_Plugins_Backend_ArvPlentyMarketsMapPrices_Bootstrap extends Shopw
 
     /**
      * Get (nice) name for plugin manager list
+     *
      * @return string
      */
     public function getLabel()
@@ -16,23 +20,29 @@ class Shopware_Plugins_Backend_ArvPlentyMarketsMapPrices_Bootstrap extends Shopw
         return 'PlentyMarkets Price to Customer Class Mapping';
     }
 
+    /**
+     * @return string
+     */
     public function getVersion()
     {
         return '1.0.0';
     }
 
+    /**
+     * @return array
+     */
     public function getInfo() {
-        return array(
+        return [
             'version' => $this->getVersion(),
             'autor' => 'arvatis media GmbH',
             'label' => $this->getLabel(),
-            'source' => "Community",
+            'source' => 'Community',
             'description' => '',
             'license' => 'MIT',
             'copyright' => 'Copyright © '. date('Y') . ', arvatis media GmbH',
             'support' => '',
             'link' => 'http://www.arvatis.com/'
-        );
+        ];
     }
 
     /**
@@ -48,6 +58,11 @@ class Shopware_Plugins_Backend_ArvPlentyMarketsMapPrices_Bootstrap extends Shopw
         return true;
     }
 
+    /**
+     * @param Enlight_Event_EventArgs $args
+     *
+     * @return array
+     */
     public function onItemPriceUpdate(Enlight_Event_EventArgs $args)
     {
         /**
