@@ -6,8 +6,8 @@ class Shopware_Plugins_Backend_ArvPlentyMarketsMapPrices_Bootstrap extends Shopw
      * @var array
      */
     private static $customerGroupToPriceFieldMapping = [
-        'H' => 'Price8',
-        'HEU' => 'Price9'
+        'H' => ['Column' => 'Price8', 'PseudoPrice' => false],
+		'HEU' => ['Column' => 'Price9', 'PseudoPrice' => false]
     ];
 
     /**
@@ -75,22 +75,38 @@ class Shopware_Plugins_Backend_ArvPlentyMarketsMapPrices_Bootstrap extends Shopw
          */
         $priceset = $args->get('priceset');
 
-        foreach (self::$customerGroupToPriceFieldMapping as $customerGroup => $priceField) {
+        foreach (self::$customerGroupToPriceFieldMapping as $customerGroup => $priceConfig) {
             $price = [];
 
             $price['customerGroupKey'] = $customerGroup;
-            $price['price'] = (!empty($priceset->{$priceField}) ? $priceset->{$priceField} : $priceset->Price);
+			
+			if (!empty($priceset->{$priceConfig['Column']})) {
+				$price['price'] = $priceset->{$priceConfig['Column']};
+			} else {
+				$price['price'] = $priceset->Price;
+				$priceConfig['Column'] = 'Price';
+			}
 
             if (isset($priceset->PurchasePriceNet) && !is_null($priceset->PurchasePriceNet))
             {
                 $price['basePrice'] = $priceset->PurchasePriceNet;
             }
-
-            if (isset($priceset->RRP) && !is_null($priceset->RRP) && isset($price['price']) && ($priceset->RRP > $price['price']))
-            {
-                $price['pseudoPrice'] = $priceset->RRP;
-            }
-
+			
+			$price['pseudoPrice'] = 0;
+			
+			if ($priceConfig['PseudoPrice'] || ($priceConfig['Column'] == 'Price' && !$priceConfig['PseudoPrice']))
+			{
+				if (isset($priceset->RRP) && !is_null($priceset->RRP) && isset($price['price']) && ($priceset->RRP > $price['price']))
+				{
+					if(!$priceConfig['PseudoPrice']) 
+					{
+						$price['price'] = $priceset->RRP;
+					} else {
+						$price['pseudoPrice'] = $priceset->RRP;
+					}
+				}
+			}
+			
             $prices[] = $price;
         }
 
